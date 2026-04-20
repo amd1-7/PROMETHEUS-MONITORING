@@ -5,15 +5,15 @@ import (
 )
 
 func main() {
-	CpuLoadAverageGauge := prometheus.NewGauge(prometheus.GaugeOpts{
+	CpuLoadAverageGauge := prometheus.NewGaugeVec(prometheus.GaugeOpts{
 		Name: "mac_cpu_charge",
-		Help: "Nombre de processus en cours ou executable par rapport au nombre de coeur ||| Interprétation pour CPU avec 8coeurs: ≤6 Optimal | 8 normal | +9 Critique",
-	})
+		Help: "Nombre de processus en cours ou executable par rapport au nombre de coeur",
+	}, []string{"seuil_critique"})
 
-	RamSPressureGauge := prometheus.NewGauge(prometheus.GaugeOpts{
+	RamSPressureGauge := prometheus.NewGaugeVec(prometheus.GaugeOpts{
 		Name: "mac_ram_surcharge",
-		Help: "Pourcentage de pression de la memoire vive (RAM) ||| Interprétation: ≤60 Optimal | ≤85 Normal | ≤95 Anormal | +95 Critique",
-	})
+		Help: "Pourcentage de pression de la memoire vive (RAM)",
+	}, []string{"seuil_critique"})
 
 	prometheus.MustRegister(CpuLoadAverageGauge)
 	prometheus.MustRegister(RamSPressureGauge)
@@ -23,3 +23,5 @@ func main() {
 
 	StartServer()
 }
+
+/* ./prometheus --config.file=Prometheus.yml */

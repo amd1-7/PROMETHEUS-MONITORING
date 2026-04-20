@@ -10,7 +10,7 @@ import (
 	"github.com/shirou/gopsutil/v3/mem"
 )
 
-func CpuAverage(metric prometheus.Gauge) {
+func CpuAverage(metric *prometheus.GaugeVec) {
 	for {
 		l, err := load.Avg()
 		if err != nil {
@@ -23,13 +23,13 @@ func CpuAverage(metric prometheus.Gauge) {
 		}
 
 		charge_cpu := l.Load1 / float64(coeurs) /* Recuperère le nombre de processus sur 1 minute */
-		metric.Set(charge_cpu)
+		metric.WithLabelValues("+9").Set(charge_cpu)
 
 		time.Sleep(time.Second * time.Duration(15))
 	}
 }
 
-func RamSPressure(metric prometheus.Gauge) {
+func RamSPressure(metric *prometheus.GaugeVec) {
 	for {
 		ram, err := mem.VirtualMemory()
 		if err != nil {
@@ -38,7 +38,7 @@ func RamSPressure(metric prometheus.Gauge) {
 
 		pourcentage := float64(ram.Total-ram.Available) / float64(ram.Total) * 100
 
-		metric.Set(pourcentage)
+		metric.WithLabelValues("90").Set(pourcentage)
 
 		time.Sleep(time.Second * time.Duration(15))
 	}

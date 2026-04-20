@@ -13,7 +13,7 @@ func StartServer() {
 	mux.Handle("/metrics", promhttp.Handler())
 	log.Printf("Initialisation du serveur...\n")
 
-	if err := http.ListenAndServe(":8080", mux); err != nil {
+	if err := http.ListenAndServe(":1221", mux); err != nil {
 		log.Fatalf("Erreur de lancement: %v\n", err)
 	}
 }
