@@ -7,6 +7,7 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/shirou/gopsutil/v3/cpu"
 	"github.com/shirou/gopsutil/v3/load"
+	"github.com/shirou/gopsutil/v3/mem"
 )
 
 func CpuAverage(metric prometheus.Gauge) {
@@ -23,6 +24,21 @@ func CpuAverage(metric prometheus.Gauge) {
 
 		charge_cpu := l.Load1 / float64(coeurs) /* Recuperère le nombre de processus sur 1 minute */
 		metric.Set(charge_cpu)
+
+		time.Sleep(time.Second * time.Duration(15))
+	}
+}
+
+func RamSPressure(metric prometheus.Gauge) {
+	for {
+		ram, err := mem.VirtualMemory()
+		if err != nil {
+			log.Fatalf("erreur de recupération des information de la RAM: %v\n", err)
+		}
+
+		pourcentage := float64(ram.Total-ram.Available) / float64(ram.Total) * 100
+
+		metric.Set(pourcentage)
 
 		time.Sleep(time.Second * time.Duration(15))
 	}
